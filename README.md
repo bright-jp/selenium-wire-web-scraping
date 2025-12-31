@@ -1,6 +1,6 @@
 # PythonでSelenium Wireを使ったWebスクレイピング
 
-[![Promo](https://github.com/luminati-io/LinkedIn-Scraper/raw/main/Proxies%20and%20scrapers%20GitHub%20bonus%20banner.png)](https://brightdata.jp/) 
+[![Promo](https://github.com/bright-jp/LinkedIn-Scraper/raw/main/Proxies%20and%20scrapers%20GitHub%20bonus%20banner.png)](https://brightdata.jp/) 
 
 このガイドでは、WebスクレイピングにSelenium Wireを使用する方法を説明し、リクエストのインターセプトや動的なプロキシローテーションなどのトピックを扱います。
 
@@ -108,7 +108,7 @@ finally:
 
 想定される結果は次のとおりです。
 
-![Some of the logged requests](https://github.com/luminati-io/selenium-wire-web-scraping/blob/main/Images/image-98-1024x597.png)
+![Some of the logged requests](https://github.com/bright-jp/selenium-wire-web-scraping/blob/main/Images/image-98-1024x597.png)
 
 ### リクエストとレスポンスのインターセプト
 
@@ -166,7 +166,7 @@ finally:
 
 想定される結果は次のようになります。
 
-![Note the X-Test-Header](https://github.com/luminati-io/selenium-wire-web-scraping/blob/main/Images/image-99-1024x538.png)
+![Note the X-Test-Header](https://github.com/bright-jp/selenium-wire-web-scraping/blob/main/Images/image-99-1024x538.png)
 
 ### WebSocketの監視
 
@@ -442,27 +442,27 @@ Selenium Wireで手動のプロキシローテーションを行うには、多�
 
 すでにアカウントをお持ちの場合はBright Dataにログインしてください。そうでない場合は、無料でアカウントを作成してください。次のユーザーダッシュボードにアクセスできるようになります。
 
-![The Bright Data dashboard](https://github.com/luminati-io/selenium-wire-web-scraping/blob/main/Images/image-100-1024x498.png)
+![The Bright Data dashboard](https://github.com/bright-jp/selenium-wire-web-scraping/blob/main/Images/image-100-1024x498.png)
 
 「View proxy products」ボタンをクリックします。
 
-![View proxy products](https://github.com/luminati-io/selenium-wire-web-scraping/blob/main/Images/image-101.png)
+![View proxy products](https://github.com/bright-jp/selenium-wire-web-scraping/blob/main/Images/image-101.png)
 
 次の「Proxies & Scraping Infrastructure」ページにリダイレクトされます。
 
-![Configuring your residential proxies](https://github.com/luminati-io/selenium-wire-web-scraping/blob/main/Images/image-102-1024x483.png)
+![Configuring your residential proxies](https://github.com/bright-jp/selenium-wire-web-scraping/blob/main/Images/image-102-1024x483.png)
 
 下にスクロールして「[Residential Proxies](/blog/proxy-101/ultimate-guide-to-proxy-types)」カードを見つけ、「Get started」ボタンをクリックします。
 
-![Residential proxies](https://github.com/luminati-io/selenium-wire-web-scraping/blob/main/Images/image-103.png)
+![Residential proxies](https://github.com/bright-jp/selenium-wire-web-scraping/blob/main/Images/image-103.png)
 
 レジデンシャルプロキシの設定ダッシュボードに移動します。ガイド付きウィザードに従い、ニーズに合わせてプロキシサービスを設定してください。
 
-![Configuring your residential proxies](https://github.com/luminati-io/selenium-wire-web-scraping/blob/main/Images/image-104.png)
+![Configuring your residential proxies](https://github.com/bright-jp/selenium-wire-web-scraping/blob/main/Images/image-104.png)
 
 「Access parameters」タブに移動し、次のようにプロキシのhost、port、username、passwordを取得します。
 
-![access parameter](https://github.com/luminati-io/selenium-wire-web-scraping/blob/main/Images/image-105.png)
+![access parameter](https://github.com/bright-jp/selenium-wire-web-scraping/blob/main/Images/image-105.png)
 
 「Host」フィールドにはすでにportが含まれている点に注意してください。
 
@@ -480,7 +480,7 @@ brd-customer-hl_4hgu8dwd-zone-residential:[email protected]:XXXXX
 
 「Active proxy」を切り替え、最後の指示に従えば準備完了です。
 
-![Active proxy toggle](https://github.com/luminati-io/selenium-wire-web-scraping/blob/main/Images/image-106-1024x164.png)
+![Active proxy toggle](https://github.com/bright-jp/selenium-wire-web-scraping/blob/main/Images/image-106-1024x164.png)
 
 以下は、Bright Dataを統合するためのSelenium Wireプロキシスニペットです。
 
