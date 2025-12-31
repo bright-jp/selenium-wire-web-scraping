@@ -1,85 +1,85 @@
-# Web Scraping With Selenium Wire in Python
+# PythonでSelenium Wireを使ったWebスクレイピング
 
-[![Promo](https://github.com/luminati-io/LinkedIn-Scraper/raw/main/Proxies%20and%20scrapers%20GitHub%20bonus%20banner.png)](https://brightdata.com/) 
+[![Promo](https://github.com/luminati-io/LinkedIn-Scraper/raw/main/Proxies%20and%20scrapers%20GitHub%20bonus%20banner.png)](https://brightdata.jp/) 
 
-This guide explains how to use Selenium Wire for web scraping and covers topics like request interception and dynamic proxy rotation.
+このガイドでは、WebスクレイピングにSelenium Wireを使用する方法を説明し、リクエストのインターセプトや動的なプロキシローテーションなどのトピックを扱います。
 
-- [What Is Selenium Wire?](#what-is-selenium-wire)
-- [Why Use Selenium Wire?](#why-use-selenium-wire)
-- [Key Features of Selenium Wire](#key-features-of-selenium-wire)
-    - [Access Requests and Responses](#access-requests-and-responses)
-    - [Intercept Requests and Responses](#intercept-requests-and-responses)
-    - [WebSocket Monitoring](#websocket-monitoring)
-    - [Manage Proxies](#manage-proxies)
-- [Proxy Rotation in Selenium Wire](#proxy-rotation-in-selenium-wire)
-    - [Requirements](#requirements)
-    - [Step 1: Randomize Proxies](#step-1-randomize-proxies)
-    - [Step 2: Set the Proxy](#step-2-set-the-proxy)
-    - [Step 3: Visit the Target Page](#step-3-visit-the-target-page)
-    - [Step 4: Put It All Together](#step-4-put-it-all-together)
-- [Rotating proxies with Bright Data Proxies](#a-better-approach-to-proxy-rotation-bright-data-proxies)
-- [Selenium vs Selenium Wire for Web Scraping](#selenium-vs-selenium-wire-for-web-scraping)
-- [Conclusion](#conclusion)
+- [Selenium Wireとは？](#what-is-selenium-wire)
+- [なぜSelenium Wireを使うのか？](#why-use-selenium-wire)
+- [Selenium Wireの主な機能](#key-features-of-selenium-wire)
+    - [リクエストとレスポンスへのアクセス](#access-requests-and-responses)
+    - [リクエストとレスポンスのインターセプト](#intercept-requests-and-responses)
+    - [WebSocketの監視](#websocket-monitoring)
+    - [プロキシの管理](#manage-proxies)
+- [Selenium Wireでのプロキシローテーション](#proxy-rotation-in-selenium-wire)
+    - [要件](#requirements)
+    - [ステップ1: プロキシをランダム化する](#step-1-randomize-proxies)
+    - [ステップ2: プロキシを設定する](#step-2-set-the-proxy)
+    - [ステップ3: ターゲットページにアクセスする](#step-3-visit-the-target-page)
+    - [ステップ4: まとめて実行する](#step-4-put-it-all-together)
+- [Bright Data Proxiesによるローテーティングプロキシ](#a-better-approach-to-proxy-rotation-bright-data-proxies)
+- [WebスクレイピングにおけるSeleniumとSelenium Wireの比較](#selenium-vs-selenium-wire-for-web-scraping)
+- [結論](#conclusion)
 
-## What Is Selenium Wire?
+## Selenium Wireとは？
 
-[Selenium Wire](https://github.com/wkeeling/selenium-wire) is an extension for Selenium’s Python bindings that provides control over browser requests. It allows intercepting and modifying both requests and responses in real time directly from your Python code while using Selenium.
+[Selenium Wire](https://github.com/wkeeling/selenium-wire) は、SeleniumのPythonバインディング向けの拡張で、ブラウザのリクエストを制御できるようにします。Seleniumを使用しながら、Pythonコードから直接、リクエストとレスポンスの両方をリアルタイムにインターセプトして変更できます。
 
 > **Note**:\
-> The library is no longer maintained, however, several scraping technologies and scripts still use it.
+> このライブラリはすでにメンテナンスされていませんが、いくつかのスクレイピング技術やスクリプトでは現在も使用されています。
 
-## Why Use Selenium Wire?
+## なぜSelenium Wireを使うのか？
 
-Browsers have certain limitations that can make web scraping challenging. For example, they do not enable you to set authorized proxy URLs or [rotate proxies](/solutions/rotating-proxies) on the fly. Selenium Wire helps you overcome those limitations by interacting with sites as regular human users would.
+ブラウザには、Webスクレイピングを難しくするいくつかの制限があります。たとえば、認証付きプロキシURLを設定したり、オンザフライで[プロキシをローテーション](/solutions/rotating-proxies)したりできません。Selenium Wireは、人間のユーザーと同様にサイトとやり取りすることで、これらの制限を克服するのに役立ちます。
 
-Here are some of the reasones why you should use Selenium Wire for web scraping:
+WebスクレイピングでSelenium Wireを使用すべき理由の一部は次のとおりです。
 
-- **Gain Direct Access to Network Traffic**: Analyze, monitor, and modify AJAX requests and responses to extract valuable data efficiently.
-- **Evade Anti-Bot Detection**: [`ChromeDriver`](https://developer.chrome.com/docs/chromedriver/downloads?hl=en) reveals identifiable details that anti-bot systems use for detection. Technologies like `undetected-chromedriver` leverage Selenium Wire to mask these details and bypass detection mechanisms.
-- **Enhance Browser Flexibility**: Traditional browsers rely on fixed startup configurations that require a restart to modify. Selenium Wire enables real-time updates to request headers and proxy settings within an active session, making it an optimal solution for dynamic web scraping.
+- **ネットワークトラフィックへ直接アクセスできる**: AJAXリクエストとレスポンスを分析・監視・変更し、価値あるデータを効率的に抽出できます。
+- **アンチボット検知を回避できる**: [`ChromeDriver`](https://developer.chrome.com/docs/chromedriver/downloads?hl=en) は、アンチボットシステムが検知に利用する識別可能な情報を露出します。`undetected-chromedriver` のような技術はSelenium Wireを活用してこれらの情報を隠し、検知メカニズムを回避します。
+- **ブラウザの柔軟性が向上する**: 従来のブラウザは固定の起動設定に依存しており、変更するには再起動が必要です。Selenium Wireはアクティブなセッション内で、リクエストヘッダーやプロキシ設定をリアルタイムに更新できるため、動的なWebスクレイピングに最適なソリューションとなります。
 
-## Key Features of Selenium Wire
+## Selenium Wireの主な機能
 
-### Access Requests and Responses
+### リクエストとレスポンスへのアクセス
 
-Selenium Wire allows you to monitor and capture HTTP/HTTPS traffic from the browser, providing access to the following key attributes:
-
-| **Attribute** | **Description** |
-| --- | --- |
-| `driver.requests` | It reports the list of captured requests in chronological order |
-| `driver.last_request` | It reports the most recently captured request  <br>(This is more efficient than using `driver.requests[-1]`) |
-| `driver.wait_for_request(pat, timeout=10)` | This method will wait—the time is defined by the `timeout` parameter—until it sees a request matching a pattern, defined by the `pat` parameter—which can be a substring or a [regular expression](/blog/web-data/web-scraping-with-regex). |
-| `driver.har` | A JSON formatted [HAR](https://docs.brightdata.com/api-reference/proxy-manager/get_har_logs) archive of HTTP transactions that have taken place. |
-| `driver.iter_requests()` | It returns an iterator over captured requests. |
-
-A Selenium Wire `Request` object has the following attributes:
+Selenium WireはブラウザからのHTTP/HTTPSトラフィックを監視・キャプチャでき、次の主要属性へアクセスできます。
 
 | **Attribute** | **Description** |
 | --- | --- |
-| `body` | The body’s request is presented as `bytes`. If the request has no body the value of `body` will be empty (for example: `b''`). |
-| `cert` | It reports information about the server SSL certificate in a dictionary format (it’s empty for non-HTTPS requests). |
-| `date` | It shows the datetime at which the request was made. |
-| `headers` | It reports a dictionary-like object of the request’s headers (note that in Selenium Wire headers are case-insensitive and duplicates are permitted). |
-| `host` | It reports the request host ( for example, `https://brightdata.com/`). |
-| `method` | It specifies the HHTP method (`GET`, `POST`, etc…) |
-| `params` | It reports a dictionary of the request’s parameters (note that if a parameter with the same name appears more than once in the request, its value in the dictionary will be a list). |
-| `path` | It reports the request path. |
-| `querystring` | It reports the query string. |
-| `response` | It reports the response object associated with the request (note that the value will be `None` if the request has no response). |
-| `url` | It reports the request URL complete with `host`, `path`, and `querystring`. |
-| `ws_messages` | In the case a request is a WebSocket (in which case, the URL is generally like `wss://`) the `ws_messages` will contain any websocket messages sent and received. |
+| `driver.requests` | キャプチャされたリクエストのリストを時系列順に報告します |
+| `driver.last_request` | 直近でキャプチャされたリクエストを報告します  <br>（これは `driver.requests[-1]` を使うより効率的です） |
+| `driver.wait_for_request(pat, timeout=10)` | `timeout` パラメータで定義された時間、`pat` パラメータで定義されたパターン（部分文字列または[正規表現](/blog/web-data/web-scraping-with-regex)）に一致するリクエストが見つかるまで待機します。 |
+| `driver.har` | 発生したHTTPトランザクションのJSON形式の[HAR](https://docs.brightdata.com/api-reference/proxy-manager/get_har_logs)アーカイブです。 |
+| `driver.iter_requests()` | キャプチャされたリクエストに対するイテレータを返します。 |
 
-Instead, a `Response` object exposes these attributes:
+Selenium Wireの `Request` オブジェクトには、次の属性があります。
 
 | **Attribute** | **Description** |
 | --- | --- |
-| `body` | The body’s response is presented as `bytes`. If the response has no body the value of `body` will be empty (for example: `b''`). |
-| `date` | It shows the datetime at which the response was received. |
-| `headers` | It reports a dictionary-like object of the response’s headers (note that in Selenium Wire headers are case-insensitive and duplicates are permitted). |
-| `reason` | It reports the reason phrase of the response, like `OK`, `Not Found`, etc… |
-| `status_code` | It reports the status of the response, like `200`, `404`, etc… |
+| `body` | リクエストの本文は `bytes` として提示されます。リクエスト本文がない場合、`body` は空になります（例: `b''`）。 |
+| `cert` | サーバーのSSL証明書に関する情報を辞書形式で報告します（非HTTPSリクエストでは空です）。 |
+| `date` | リクエストが行われた日時を示します。 |
+| `headers` | リクエストのヘッダーの辞書ライクなオブジェクトを報告します（Selenium Wireのヘッダーは大文字小文字を区別せず、重複が許可される点に注意してください）。 |
+| `host` | リクエストホストを報告します（例: `https://brightdata.jp/`）。 |
+| `method` | HHTPメソッド（`GET`、`POST` など）を指定します |
+| `params` | リクエストのパラメータの辞書を報告します（同名のパラメータが複数回出現する場合、辞書内の値はリストになります）。 |
+| `path` | リクエストパスを報告します。 |
+| `querystring` | クエリ文字列を報告します。 |
+| `response` | リクエストに関連付けられたレスポンスオブジェクトを報告します（レスポンスがない場合は値が `None` になります）。 |
+| `url` | `host`、`path`、`querystring` を含む完全なリクエストURLを報告します。 |
+| `ws_messages` | リクエストがWebSocketの場合（URLが一般的に `wss://` のような形式）、`ws_messages` に送受信されたWebSocketメッセージが含まれます。 |
 
-Let's write a Python script to test this feature:
+一方で、`Response` オブジェクトは次の属性を公開します。
+
+| **Attribute** | **Description** |
+| --- | --- |
+| `body` | レスポンスの本文は `bytes` として提示されます。レスポンス本文がない場合、`body` は空になります（例: `b''`）。 |
+| `date` | レスポンスが受信された日時を示します。 |
+| `headers` | レスポンスのヘッダーの辞書ライクなオブジェクトを報告します（Selenium Wireのヘッダーは大文字小文字を区別せず、重複が許可される点に注意してください）。 |
+| `reason` | `OK`、`Not Found` などのレスポンスの理由フレーズを報告します。 |
+| `status_code` | `200`、`404` などのレスポンスステータスを報告します。 |
+
+この機能をテストするPythonスクリプトを書いてみましょう。
 
 ```python
 from seleniumwire import webdriver
@@ -89,7 +89,7 @@ driver = webdriver.Chrome()
 
 try:
     # Open the target website
-    driver.get("https://brightdata.com/")
+    driver.get("https://brightdata.jp/")
 
     # Access and print all captured requests
     for request in driver.requests:
@@ -104,23 +104,23 @@ finally:
     driver.quit()
 ```
 
-This code opens the target website and capture requests by using `driver.requests`. Then, it loops through a for loop to intercept some request attributes like `url`, `method`, and `headers`.
+このコードはターゲットサイトを開き、`driver.requests` を使用してリクエストをキャプチャします。その後、forループで `url`、`method`、`headers` などのリクエスト属性をインターセプトして出力します。
 
-Here is the expected result:
+想定される結果は次のとおりです。
 
 ![Some of the logged requests](https://github.com/luminati-io/selenium-wire-web-scraping/blob/main/Images/image-98-1024x597.png)
 
-### Intercept Requests and Responses
+### リクエストとレスポンスのインターセプト
 
 
-Selenium Wire enables interception and modification of requests and responses using interceptors—functions that are triggered as network traffic flows through the browser.
+Selenium Wireでは、インターセプター（ブラウザを通過するネットワークトラフィックに応じてトリガーされる関数）を使って、リクエストとレスポンスをインターセプトおよび変更できます。
 
-There are two separate interceptors:
+インターセプターは2種類あります。
 
-* `driver.request_interceptor`: intercepts requests and accepts a single argument.
-* `driver.response_interceptor`: intercepts the response and accepts two arguments, one for the originating request and one for the response.
+* `driver.request_interceptor`: リクエストをインターセプトし、単一の引数を受け取ります。
+* `driver.response_interceptor`: レスポンスをインターセプトし、発生元のリクエスト用とレスポンス用の2つの引数を受け取ります。
 
-Here is an example that shows how to use a request interceptor:
+次は、リクエストインターセプターの使い方を示す例です。
 
 ```python
 from seleniumwire import webdriver
@@ -143,7 +143,7 @@ driver.request_interceptor = interceptor
 
 try:
     # Open a website that makes multiple requests
-    driver.get("https://brightdata.com/")
+    driver.get("https://brightdata.jp/")
 
     # Print all captured requests
     for request in driver.requests:
@@ -156,38 +156,38 @@ finally:
     driver.quit()
 ```
 
-This is what this snippet does:
+このスニペットの動作は次のとおりです。
 
-* **Interceptor function**: Creates an interceptor function to be called for every outgoing request. This adds a custom header to all outgoing requests with `request.headers[]`. Also, it blocks browser requests for `example.com` domain.
-* **Captures requests**: After the page is loaded, all captured requests are printed, including the modified headers.
+* **Interceptor function**: 送信されるすべてのリクエストに対して呼び出されるインターセプター関数を作成します。`request.headers[]` を使って、送信されるすべてのリクエストにカスタムヘッダーを追加します。また、`example.com` ドメインへのブラウザリクエストをブロックします。
+* **Captures requests**: ページが読み込まれた後、変更されたヘッダーを含め、キャプチャされたすべてのリクエストが出力されます。
 
 > **Note:**\
->  Blocking requests is beneficial when pages load extra resources like ads, analytics scripts, or third-party widgets that are not essential to your task. This approach enhances scraping efficiency by increasing speed and minimizing bandwidth consumption.
+> リクエストのブロックは、広告、解析スクリプト、サードパーティ製ウィジェットなど、タスクに不要な追加リソースをページが読み込む場合に有効です。このアプローチは、速度を向上させ、帯域幅の消費を最小化することでスクレイピング効率を高めます。
 
-The expected result should be something like this:
+想定される結果は次のようになります。
 
 ![Note the X-Test-Header](https://github.com/luminati-io/selenium-wire-web-scraping/blob/main/Images/image-99-1024x538.png)
 
-### WebSocket Monitoring
+### WebSocketの監視
 
-Many modern websites rely on [`WebSockets`](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) to maintain real-time communication with servers. Unlike traditional HTTP requests, `WebSockets` create a continuous connection between the browser and the server, enabling seamless data exchange without repeated handshakes.  
+多くのモダンなWebサイトは、サーバーとのリアルタイム通信を維持するために [`WebSockets`](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) に依存しています。従来のHTTPリクエストとは異なり、`WebSockets` はブラウザとサーバー間に継続的な接続を作り、繰り返しのハンドシェイクなしでシームレスなデータ交換を可能にします。  
 
-Since crucial data often flows through these channels, intercepting `WebSocket` traffic allows direct access to real-time server responses, eliminating the need for browser-based processing or rendering.
+重要なデータがこれらのチャネルを通って流れることが多いため、`WebSocket` トラフィックをインターセプトすれば、リアルタイムのサーバーレスポンスへ直接アクセスでき、ブラウザ側での処理やレンダリングの必要がなくなります。
 
-Here are the attributes of a Selenium Wire `WebSocket` object:
+以下はSelenium Wireの `WebSocket` オブジェクトの属性です。
 
 | **Attribute** | **Description** |
 | --- | --- |
-| `content` | It reports the message’s content which can be either a `str` or in the `bytes` format. |
-| `date` | It shows the datetime of the message. |
-| `headers` | It reports a dictionary-like object of the response’s headers (note that in Selenium Wire headers are case-insensitive and duplicates are permitted). |
-| `from_client` | This is a boolean that returns `True` when the message was sent by the client and `False` by the server. |
+| `content` | メッセージの内容を報告します。`str` または `bytes` 形式になります。 |
+| `date` | メッセージの日時を示します。 |
+| `headers` | レスポンスヘッダーの辞書ライクなオブジェクトを報告します（Selenium Wireのヘッダーは大文字小文字を区別せず、重複が許可される点に注意してください）。 |
+| `from_client` | クライアントが送信したメッセージの場合は `True`、サーバーが送信した場合は `False` を返すbooleanです。 |
 
-### Manage Proxies
+### プロキシの管理
 
-Proxy servers function as intermediaries between your device and target websites, concealing your IP address. They facilitate bypassing IP-based restrictions, mitigate blocking due to rate limits, and enable access to geo-restricted content for seamless web scraping.
+プロキシサーバーは、デバイスとターゲットWebサイトの間で中継として機能し、IPアドレスを隠します。IPベースの制限の回避、レート制限によるブロッキングの軽減、ジオロケーション制限コンテンツへのアクセスを可能にし、シームレスなWebスクレイピングを支援します。
 
-Let's configure a proxy in Selenium Wire:
+Selenium Wireでプロキシを設定してみましょう。
 
 ```python
 # Set up Selenium Wire options
@@ -202,9 +202,9 @@ options = {
 driver = webdriver.Chrome(seleniumwire_options=options)
 ```
 
-This setup differs from configuring a proxy in vanilla Selenium, where you need to rely on Chrome’s `--proxy-server` flag. This means that proxy configuration is static in vanilla Selenium. After a proxy has been set, it remains in effect for the entire browser session and cannot be modified without restarting the browser. This restriction can be limiting, particularly when dynamic proxy rotation is required.
+この設定は、素のSeleniumでプロキシを設定する場合（Chromeの `--proxy-server` フラグに依存する必要がある）とは異なります。これは、素のSeleniumではプロキシ設定が静的であることを意味します。いったんプロキシを設定すると、ブラウザセッション全体で有効になり、ブラウザを再起動しない限り変更できません。この制約は、特に動的なプロキシローテーションが必要な場合に制限となり得ます。
 
-In contrast, Selenium Wire provides the flexibility to change proxies dynamically within the same browser instance. That is possible thanks to the `proxy` attribute:
+これに対して、Selenium Wireは同一ブラウザインスタンス内でプロキシを動的に変更できる柔軟性を提供します。これは `proxy` 属性のおかげで可能になります。
 
 ```python
 # Dynamically change the proxy
@@ -214,52 +214,52 @@ driver.proxy = {
 }
 ```
 
-Plus, Chrome’s `--proxy-server` flag does not support proxies with authentication credentials in the URL:
+さらに、Chromeの `--proxy-server` フラグは、URLに認証情報を含むプロキシをサポートしていません。
 
 ```
 protocol://username:password@host:port
 ```
 
-Instead, Selenium Wire fully supports authenticated proxies, making it the better choice for web scraping.
+その代わり、Selenium Wireは認証付きプロキシを完全にサポートしているため、Webスクレイピングにはより良い選択肢となります。
 
-## Proxy Rotation in Selenium Wire
+## Selenium Wireでのプロキシローテーション
 
-Let's set up a Selenium Wire project for proxy rotation. This will help you make your exit IP change at every request.
+プロキシローテーションのためにSelenium Wireプロジェクトをセットアップしましょう。これにより、リクエストごとに退出IPを変更できるようになります。
 
-### Requirements
+### 要件
 
-You need the following prerequisites to follow this part of the guide:
+このガイドのこの部分に従うには、次の前提条件が必要です。
 
-* Python 3.7 or higher
-* [Supported web browser](https://www.selenium.dev/documentation/webdriver/troubleshooting/errors/driver_location/)
+* Python 3.7以上
+* [対応しているWebブラウザ](https://www.selenium.dev/documentation/webdriver/troubleshooting/errors/driver_location/)
 
-Start with creating a virtual environment directory:
+まず、仮想環境ディレクトリを作成します。
 
 ```bash
 python -m venv venv
 ```
 
-To activate it, on Windows, run:
+有効化するには、Windowsでは次を実行します。
 
 ```bash
 venv\Scripts\activate
 ```
 
-On macOS/Linux, execute:
+macOS/Linuxでは次を実行します。
 
 ```bash
 source venv/bin/activate
 ```
 
-Now  install Selenium Wire (Selenium will be automatically installed as its dependency):
+次にSelenium Wireをインストールします（依存関係としてSeleniumが自動的にインストールされます）。
 
 ```bash
 pip install selenium-wire
 ```
 
-### Step 1: Randomize Proxies
+### ステップ1: プロキシをランダム化する
 
-First, you need a list of valid proxy URLs. You can use our list of [free proxies](https://brightdata.com/solutions/free-proxies). Add them to a list and use [`random.choice()`](https://docs.python.org/3/library/random.html#random.choice) to pick a random element from it:
+まず、有効なプロキシURLのリストが必要です。[free proxies](https://brightdata.jp/solutions/free-proxies) のリストを使用できます。これらをリストに追加し、[`random.choice()`](https://docs.python.org/3/library/random.html#random.choice) を使ってランダムな要素を選択します。
 
 ```python
 def get_random_proxy():
@@ -274,23 +274,23 @@ def get_random_proxy():
     return random.choice(proxies)
 ```
 
-Once called, this function returns a random proxy URL from the list.
+呼び出されると、この関数はリストからランダムなプロキシURLを返します。
 
-To make it work, do not forget to import `random`:
+動作させるために、`random` のimportを忘れないでください。
 
 ```
 import random
 ```
 
-### Step 2: Set the Proxy
+### ステップ2: プロキシを設定する
 
-Call the `get_random_proxy()` function to get a proxy URL:
+`get_random_proxy()` 関数を呼び出してプロキシURLを取得します。
 
 ```python
 proxy = get_random_proxy()
 ```
 
-Initialize the browser instance and set the selected proxy:
+ブラウザインスタンスを初期化し、選択したプロキシを設定します。
 
 ```python
 # Selenium Wire configuration with the proxy
@@ -309,15 +309,16 @@ chrome_options.add_argument("--headless")  # Run the browser in headless mode
 driver = webdriver.Chrome(service=Service(), options=chrome_options, seleniumwire_options=seleniumwire_options)
 ```
 
-The above snippet requires the following imports:
+上記スニペットには、次のimportが必要です。
 
 ```python
 from seleniumwire import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 ```
 
-For dynamically changing the proxy during the browser session, use this code instead:
+ブラウザセッション中にプロキシを動的に変更するには、代わりに次のコードを使用します。
 
 ```python
 driver.proxy = {
@@ -326,9 +327,9 @@ driver.proxy = {
 }
 ```
 
-### Step 3: Visit the Target Page
+### ステップ3: ターゲットページにアクセスする
 
-Visit the target website, extract the output, and close the browser:
+ターゲットWebサイトにアクセスし、出力を抽出してブラウザを閉じます。
 
 ```python
 try:
@@ -346,17 +347,17 @@ finally:
     driver.quit()
 ```
 
-To make it work, import `By` from Selenium:
+動作させるために、Seleniumから `By` をimportしてください。
 
 ```python
 from selenium.webdriver.common.by import By
 ```
 
-In this example, the destination page is the [`/ip`](https://httpbin.io/ip) endpoint from the HTTPBin project: this page returns the IP address of the caller. If everything goes as expected, the script should print a different IP from the list of proxies on each run.
+この例では、宛先ページはHTTPBinプロジェクトの [`/ip`](https://httpbin.io/ip) エンドポイントです。このページは呼び出し元のIPアドレスを返します。すべてが期待どおりに動作すれば、スクリプトは実行ごとにプロキシリストから異なるIPを出力するはずです。
 
-### Step 4: Put It All Together
+### ステップ4: まとめて実行する
 
-This is the entire Selenium Wire proxy rotation logic that should be in your `selenium_wire.py` file:
+次は、`selenium_wire.py` ファイルに入れるべきSelenium Wireのプロキシローテーションロジック全体です。
 
 ```python
 import random
@@ -409,13 +410,13 @@ finally:
     driver.quit()
 ```
 
-To run the file, launch:
+ファイルを実行するには、次を起動します。
 
 ```bash
 python3 selenium_wire.py
 ```
 
-At each run, the output should be:
+実行ごとに、出力は次のようになります。
 
 ```json
 {
@@ -423,7 +424,7 @@ At each run, the output should be:
 }
 ```
 
-Or:
+または次のようになります。
 
 ```json
 {
@@ -431,57 +432,57 @@ Or:
 }
 ```
 
-And so on…
+など…
 
-Run the script multiple times, and you will see a different IP address each time.
+スクリプトを複数回実行すると、毎回異なるIPアドレスが表示されるはずです。
 
-## A Better Approach to Proxy Rotation: Bright Data Proxies
+## より良いプロキシローテーションのアプローチ: Bright Data Proxies
 
-Manual proxy rotation in Selenium Wire involves a lot of boilerplate code and requires maintaining a list of valid proxy URLs. Instead, you can use Bright Data’s rotating proxies that automatically handle IP address changes. Here is how you can use them.
+Selenium Wireで手動のプロキシローテーションを行うには、多くのボイラープレートコードが必要で、有効なプロキシURLのリストを維持する必要があります。代わりに、IPアドレスの変更を自動的に処理するBright Dataのローテーティングプロキシを使用できます。使用方法は次のとおりです。
 
-If you already have an account, log in to Bright Data. Otherwise, create an account for free. You will gain access to the following user dashboard:
+すでにアカウントをお持ちの場合はBright Dataにログインしてください。そうでない場合は、無料でアカウントを作成してください。次のユーザーダッシュボードにアクセスできるようになります。
 
 ![The Bright Data dashboard](https://github.com/luminati-io/selenium-wire-web-scraping/blob/main/Images/image-100-1024x498.png)
 
-Click the “View proxy products” button:
+「View proxy products」ボタンをクリックします。
 
 ![View proxy products](https://github.com/luminati-io/selenium-wire-web-scraping/blob/main/Images/image-101.png)
 
-You will be redirected to the “Proxies & Scraping Infrastructure” page below:
+次の「Proxies & Scraping Infrastructure」ページにリダイレクトされます。
 
 ![Configuring your residential proxies](https://github.com/luminati-io/selenium-wire-web-scraping/blob/main/Images/image-102-1024x483.png)
 
-Scroll down, find the “[Residential Proxies](/blog/proxy-101/ultimate-guide-to-proxy-types)” card, and click on the “Get started” button:
+下にスクロールして「[Residential Proxies](/blog/proxy-101/ultimate-guide-to-proxy-types)」カードを見つけ、「Get started」ボタンをクリックします。
 
 ![Residential proxies](https://github.com/luminati-io/selenium-wire-web-scraping/blob/main/Images/image-103.png)
 
-You will reach the residential proxy configuration dashboard. Follow the guided wizard and set up the proxy service based on your needs.
+レジデンシャルプロキシの設定ダッシュボードに移動します。ガイド付きウィザードに従い、ニーズに合わせてプロキシサービスを設定してください。
 
 ![Configuring your residential proxies](https://github.com/luminati-io/selenium-wire-web-scraping/blob/main/Images/image-104.png)
 
-Go to the “Access parameters” tab and retrieve your proxy’s host, port, username, and password as follows:
+「Access parameters」タブに移動し、次のようにプロキシのhost、port、username、passwordを取得します。
 
 ![access parameter](https://github.com/luminati-io/selenium-wire-web-scraping/blob/main/Images/image-105.png)
 
-Note that the “Host” field already includes the port.
+「Host」フィールドにはすでにportが含まれている点に注意してください。
 
-That is all you need to build the proxy URL and set it in Selenium Wire. Collect all the information and build a URL with the following syntax:
+これで、プロキシURLを構築してSelenium Wireに設定するために必要なものはすべて揃いました。すべての情報を収集し、次の構文でURLを構築します。
 
 ```
 <username>:<password>@<host>
 ```
 
-For example, in this case it would be:
+たとえば、このケースでは次のようになります。
 
 ```
 brd-customer-hl_4hgu8dwd-zone-residential:[email protected]:XXXXX
 ```
 
-Toggle “Active proxy,” follow the last instructions, and you are good to go!
+「Active proxy」を切り替え、最後の指示に従えば準備完了です。
 
 ![Active proxy toggle](https://github.com/luminati-io/selenium-wire-web-scraping/blob/main/Images/image-106-1024x164.png)
 
-Here is the Selenium Wire proxy snippet for Bright Data integration:
+以下は、Bright Dataを統合するためのSelenium Wireプロキシスニペットです。
 
 ```python
 # Bright Data proxy URL
@@ -499,20 +500,20 @@ options = {
 driver = webdriver.Chrome(seleniumwire_options=options)
 ```
 
-## Selenium vs Selenium Wire for Web Scraping
+## WebスクレイピングにおけるSeleniumとSelenium Wireの比較
 
-To summarize, here is the Selenium vs Selenium Wire comparison:
+要約すると、SeleniumとSelenium Wireの比較は次のとおりです。
 
 |     | **Selenium** | **Selenium Wire** |
 | --- | --- | --- |
-| **Purpose** | Automates web browsers to perform UI testing and web interactions | Extends Selenium to provide additional capabilities for inspecting and modifying HTTP/HTTPS requests and responses |
-| **HTTP/HTTPS request handling** | Does not provide direct access to HTTP/HTTPS requests or responses | Allows inspection, modification, and capturing of HTTP/HTTPS requests and responses |
-| **Proxy support** | Has limited proxy support (requires manual configuration) | Advanced proxy management, with support for dynamic setting |
-| **Performance** | Lightweight and fast | Slightly slower due to the capturing and processing of the network traffic |
-| **Use cases** | Primarily used for functional testing of web applications, handy for basic web scraping cases | Useful for testing APIs, debugging network traffic, and web scraping |
+| **Purpose** | UIテストおよびWeb操作を実行するためにWebブラウザを自動化します | Seleniumを拡張し、HTTP/HTTPSリクエストとレスポンスの検査および変更のための追加機能を提供します |
+| **HTTP/HTTPS request handling** | HTTP/HTTPSリクエストやレスポンスへ直接アクセスする機能は提供しません | HTTP/HTTPSリクエストとレスポンスの検査・変更・キャプチャが可能です |
+| **Proxy support** | プロキシサポートが限定的です（手動設定が必要） | 動的設定をサポートする高度なプロキシ管理 |
+| **Performance** | 軽量で高速です | ネットワークトラフィックのキャプチャと処理のため、やや低速です |
+| **Use cases** | 主にWebアプリケーションの機能テストに使用され、基本的なWebスクレイピングにも便利です | APIのテスト、ネットワークトラフィックのデバッグ、Webスクレイピングに有用です |
 
-## Conclusion
+## 結論
 
-While Selenium Wire can be used for web scraping efficiently, it isn't maintained software and is not a one-size-fits-all solution.
+Selenium WireはWebスクレイピングに効率的に使用できますが、メンテナンスされていないソフトウェアであり、万能なソリューションではありません。
 
-Instead, consider using vanilla Selenium with a dedicated scraping browser like the [Scraping Browser from Bright Data](https://brightdata.com/products/scraping-browser). It's a scalable cloud browser that works with [Playwright](https://brightdata.com/products/scraping-browser/playwright), [Puppeteer](https://brightdata.com/products/scraping-browser/puppeteer), [Selenium](https://brightdata.com/products/scraping-browser/selenium), and others. It seamlessly rotates exit IPs for each request while managing browser fingerprinting, retries, CAPTCHA solving, and more. Try it to eliminate blocking issues and optimize your scraping workflow.
+代わりに、素のSeleniumと、[Bright DataのScraping Browser](https://brightdata.jp/products/scraping-browser) のような専用のスクレイピングブラウザの利用を検討してください。これは[Playwright](https://brightdata.jp/products/scraping-browser/playwright)、[Puppeteer](https://brightdata.jp/products/scraping-browser/puppeteer)、[Selenium](https://brightdata.jp/products/scraping-browser/selenium)などと連携するスケーラブルなクラウドブラウザです。各リクエストごとに退出IPをシームレスにローテーションしつつ、ブラウザフィンガープリント、リトライ、CAPTCHA解決なども管理します。ブロッキングの問題を解消し、スクレイピングのワークフローを最適化するためにお試しください。
